@@ -4,7 +4,11 @@ echo "Please insert LDAP username:"
 read username
 
 echo "Please insert LDAP password:"
+stty -echo
 read password
+stty echo
+
+password="$(echo $password | sed 's/\([:/@]\)/\\\1/g')"
 
 echo -n "Applying settings to apt-get"
 echo "Acquire::http::proxy "http://$username:$password@netmon.iitb.ac.in:80/";
@@ -20,19 +24,21 @@ export https_proxy="https://$username:$password@netmon.iitb.ac.in:80/"" >> /etc/
 echo "\t[Done]"
 
 echo -n "Applying settings to wget"
+sed -i '/.*_proxy=.*/d' /etc/wgetrc
 echo "use_proxy=on
 http_proxy=http://$username:$password@netmon.iitb.ac.in:80/
 ftp_proxy=ftp://$username:$password@netmon.iitb.ac.in:80/
 https_proxy=https://$username:$password@netmon.iitb.ac.in:80/" >> /etc/wgetrc
 echo "\t[Done]"
 
-echo "It is recommended that you restart the system for the settings to get applied.\nDo you want to restart now?[Y/N]"
+echo -n "It is recommended that you restart the system for the settings to get applied.\nDo you want to restart now?[Y/N]"
 read input
-if input="Y" 
+k="Y"
+if [ "$input" = "$k" ]
 then
-  echo -n "Rebooting...."
+	echo -n "Rebooting...."
 	reboot
 else
-	echo -n "Reboot for applying the settings!!"
+	echo "Reboot for applying the settings!!"
 	exit
 fi
