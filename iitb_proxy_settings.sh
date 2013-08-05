@@ -11,9 +11,9 @@ stty echo
 password="$(echo $password | sed 's/\([:/@]\)/\\\1/g')"
 
 echo -n "Applying settings to apt-get"
-echo "Acquire::http::proxy "http://$username:$password@netmon.iitb.ac.in:80/";
-Acquire::https::proxy "https://$username:$password@netmon.iitb.ac.in:80/";
-Acquire::ftp::proxy "ftp://$username:$password@netmon.iitb.ac.in:80/";" > /etc/apt/apt.conf
+echo "Acquire::http::proxy \"http://$username:$password@netmon.iitb.ac.in:80/\";
+Acquire::https::proxy \"https://$username:$password@netmon.iitb.ac.in:80/\";
+Acquire::ftp::proxy \"ftp://$username:$password@netmon.iitb.ac.in:80/\";" > /etc/apt/apt.conf
 echo "\t[Done]"
 
 echo -n "Applying settings to bashrc"
