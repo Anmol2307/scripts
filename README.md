@@ -12,3 +12,12 @@ hotspot.bat
 
 Creates a hotspot in your windows 7 Laptop without any connectify.
 uses the command netsh.
+
+.inputrc
+==========
+
+Create a file ~/.inpurc . 
+This allows you to search through the history in bash terminal
+for example,
+  type 'cd ' and press up arrow , you will search everything in
+  history
