@@ -17,8 +17,14 @@ Run as administrator <br/>
 .inputrc
 ==========
 
-Create a file ~/.inpurc . <br/>
+Create a file ~/.inputrc . <br/>
 This allows you to search through the history in bash terminal <br/>
 for example,<br/>
 type 'cd ' and press up arrow , you will search everything in <br/>
 history<br/>
+
+recover-mysql-password.sh
+=========================
+
+Have you ever forgot your mysql root password. <br/>
+Then use this script to change your mysql root user's password.
