@@ -28,3 +28,9 @@ recover-mysql-password.sh
 
 Have you ever forgot your mysql root password. <br/>
 Then use this script to change your mysql root user's password.
+
+start_hotspot.sh
+=================
+
+create a wifi hotspot in your ubuntu. <br/>
+testing to be done
