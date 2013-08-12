@@ -16,31 +16,33 @@ stty echo
 
 if [ "$password" == "$newPass" ]
 then
-	echo "password matched"
+echo "password matched"
 else
-	echo "passwords dont match, run again"
-	exit
+echo "passwords dont match, run again"
+exit
 fi
 #creating a temp file
 sudo touch temp.sql
 echo "use mysql;
 update user set password=PASSWORD(\"$password\") where User='root';
 flush privileges;
-quit;" > temp.sql
+exit;" > temp.sql
 
-if [  -f "/etc/init.d/mysql" ]
+if [ -f "/etc/init.d/mysql" ]
 then
-	# stopping the process, if its running
-	echo "stopping mysql process"
-	sudo /etc/init.d/mysql stop
-	#start to mysql server w/o password
-	sudo mysqld_safe --skip-grant-tables &
-	## setting up new mysql root user password
-	mysql -u root  < temp.sql
-	echo "stopping process again"
-	sudo /etc/init.d/mysql stop
-	echo "password rest done"
-	echo "starting your mysql server"
-	sudo /etc/init.d/mysql start
-	echo "login to the root with your new password"
+# stopping the process, if its running
+echo "stopping mysql process"
+sudo service mysql stop
+echo "starting  mysql process again safely"
+#start to mysql server w/o password
+sudo mysqld_safe --skip-grant-tables
+## setting up new mysql root user password
+mysql -u root < temp.sql
+echo "stopping process again"
+sudo service mysql stop
+echo "password rest done"
+sudo rm temp.sql
+echo "starting your mysql server"
+sudo service mysql start
+echo "login to the root with your new password"
 fi
