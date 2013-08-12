@@ -1,59 +1,57 @@
 #!/bin/bash
 # Pre-Configure
 touch tmp
-CAT=/etc/cat
 # Installing packages
-result1=$(dpkg-query -l 'hostapd')
-echo $result1
-result2=$(dpkg-query -l 'dnsmasq')
+result1=$(dpkg-query -W -f='${Status} ${Version}\n' hostapd)
+result2=$(dpkg-query -W -f='${Status} ${Version}\n' dnsmasq)
 
-if [[ $result1 =~ "dpkg-query: no packages found matching.*" ]]; then
-  echo -n "Installing hostapd... \t"
-  @apt-get install hostapd
+if [[ $result1 =~ ".*install ok installed.*" ]]; then
+  echo -n "hostapd already installed... "
 else
-  echo -n "hostapd already installed... \t"
+  echo -n "Installing hostapd... "
+  apt-get install hostapd
 fi
 echo "[Done]"
 
-if [[ $result1 =~ "dpkg-query: no packages found matching.*" ]]; then
-  echo -n "Installing dnsmasq... \t"
-  @apt-get install dnsmasq
+if [[ $result2 =~ ".*install ok installed.*" ]]; then
+  echo -n "dnsmasq already installed... "
 else
-  echo -n "dnsmasq already installed... \t"
+  echo -n "Installing dnsmasq... "
+  apt-get install dnsmasq
 fi
 echo "[Done]"
 
 # Stop the processes if running and disable from starting on system start up
-echo -n "Stopping hostapd... \t"
+echo -n "Stopping hostapd... "
 service hostapd stop >tmp
 echo "[Done]"
-echo -n "Stopping dnsmasq... \t"
+echo -n "Stopping dnsmasq... "
 service dnsmasq stop>tmp
 echo "[Done]"
-echo -n "Disabling hotapd from starting on system startup... \t"
+echo -n "Disabling hotapd from starting on system startup... "
 update-rc.d hostapd disable>tmp
 echo "[Done]"
-echo -n "Disabling dnsmasq from starting on system startup... \t"
+echo -n "Disabling dnsmasq from starting on system startup... "
 update-rc.d dnsmasq disable>tmp
 echo "[Done]"
 
 # Editing /etc/dnsmasq.conf
-result3=$($(CAT) /etc/dnsmasq)
-if [[ $result3 =~ ".*# Bind to only one interface\n
-      bind-interfaces\n
-      # Choose interface for binding\n
-      interface=wlan0\n
-      # Specify range of IP addresses for DHCP leasses\n
-      dhcp-range=192.168.150.2,192.168.150.10.*" ]]; then
-  echo -n "dnsmasq already edited... \t"
+result3=$(cat /etc/dnsmasq.conf)
+if [[ $result3 =~ ".*# Bind to only one interface
+bind-interfaces
+# Choose interface for binding
+interface=wlan0
+# Specify range of IP addresses for DHCP leasses
+dhcp-range=192.168.150.2,192.168.150.10.*" ]]; then
+  echo -n "dnsmasq already edited... "
 else
   echo -n "Editing dnsmasq... \t"
-  echo "# Bind to only one interface\n
-      bind-interfaces\n
-      # Choose interface for binding\n
-      interface=wlan0\n
-      # Specify range of IP addresses for DHCP leasses\n
-      dhcp-range=192.168.150.2,192.168.150.10" >> /etc/dnsmasq.conf
+  echo "# Bind to only one interface
+bind-interfaces
+# Choose interface for binding
+interface=wlan0
+# Specify range of IP addresses for DHCP leasses
+dhcp-range=192.168.150.2,192.168.150.10" >> /etc/dnsmasq.conf
 fi
 echo "[Done]"
 
@@ -76,19 +74,19 @@ then
 fi
 
 # Editing /etc/hostapd.conf
-echo "# Define interface\n
-      interface=wlan0\n
-      # Select driver\n
-      driver=nl80211\n
-      # Set access point name\n
-      ssid=$ssid\n
-      # Set access point harware mode to 802.11g\n
-      hw_mode=g\n
-      # Set WIFI channel (can be easily changed)\n
-      channel=6\n
-      # Enable WPA2 only (1 for WPA, 2 for WPA2, 3 for WPA + WPA2)\n
-      wpa=2\n
-      wpa_passphrase=$password" > /etc/hotapd.conf
+echo "# Define interface
+interface=wlan0
+# Select driver
+driver=nl80211
+# Set access point name
+ssid=$ssid
+# Set access point harware mode to 802.11g
+hw_mode=g
+# Set WIFI channel (can be easily changed)
+channel=6
+# Enable WPA2 only (1 for WPA, 2 for WPA2, 3 for WPA + WPA2)
+wpa=2
+wpa_passphrase=$password" > /etc/hostapd.conf
 
 # Start
 # Configure IP address for WLAN
