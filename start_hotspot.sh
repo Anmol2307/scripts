@@ -1,52 +1,53 @@
 #!/bin/bash
 # Pre-Configure
+touch tmp
+CAT=/etc/cat
 # Installing packages
 result1=$(dpkg-query -l 'hostapd')
+echo $result1
 result2=$(dpkg-query -l 'dnsmasq')
 
-if [[ $result1 =~ dpkg-query: no packages found matching.* ]]
-then
-  echo -n "Installing hostapd... \t";
-  sudo apt-get install hostapd;
+if [[ $result1 =~ "dpkg-query: no packages found matching.*" ]]; then
+  echo -n "Installing hostapd... \t"
+  @apt-get install hostapd
 else
-  echo -n "hostapd already installed... \t";
+  echo -n "hostapd already installed... \t"
 fi
 echo "[Done]"
 
-if [[ $result1 =~ dpkg-query: no packages found matching.* ]]
-then
-  echo -n "Installing dnsmasq... \t";
-  sudo apt-get install dnsmasq;
+if [[ $result1 =~ "dpkg-query: no packages found matching.*" ]]; then
+  echo -n "Installing dnsmasq... \t"
+  @apt-get install dnsmasq
 else
-  echo -n "dnsmasq already installed... \t";
+  echo -n "dnsmasq already installed... \t"
 fi
 echo "[Done]"
 
 # Stop the processes if running and disable from starting on system start up
 echo -n "Stopping hostapd... \t"
-sudo service hostapd stop
+service hostapd stop >tmp
 echo "[Done]"
 echo -n "Stopping dnsmasq... \t"
-sudo service dnsmasq stop
+service dnsmasq stop>tmp
 echo "[Done]"
 echo -n "Disabling hotapd from starting on system startup... \t"
-sudo update-rc.d hostapd disable
+update-rc.d hostapd disable>tmp
 echo "[Done]"
 echo -n "Disabling dnsmasq from starting on system startup... \t"
-sudo update-rc.d dnsmasq disable
+update-rc.d dnsmasq disable>tmp
 echo "[Done]"
 
 # Editing /etc/dnsmasq.conf
-if [[ $(cat /etc/dnsmasq) =~ .*# Bind to only one interface\n
+result3=$($(CAT) /etc/dnsmasq)
+if [[ $result3 =~ ".*# Bind to only one interface\n
       bind-interfaces\n
       # Choose interface for binding\n
       interface=wlan0\n
       # Specify range of IP addresses for DHCP leasses\n
-      dhcp-range=192.168.150.2,192.168.150.10 ]]
-then
-  echo -n "dnsmasq already edited... \t";
+      dhcp-range=192.168.150.2,192.168.150.10.*" ]]; then
+  echo -n "dnsmasq already edited... \t"
 else
-  echo -n "Editind dnsmasq... \t";
+  echo -n "Editing dnsmasq... \t"
   echo "# Bind to only one interface\n
       bind-interfaces\n
       # Choose interface for binding\n
@@ -91,20 +92,20 @@ echo "# Define interface\n
 
 # Start
 # Configure IP address for WLAN
-sudo ifconfig wlan0 192.168.150.1
+ifconfig wlan0 192.168.150.1
 # Start DHCP/DNS server
-sudo service dnsmasq restart
+service dnsmasq restart
 # Enable routing
-sudo sysctl net.ipv4.ip_forward=1
+sysctl net.ipv4.ip_forward=1
 # Enable NAT
-sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 # Run access point daemon
-sudo hostapd /etc/hostapd.conf
+hostapd /etc/hostapd.conf
 # Stop
 # Disable NAT
-sudo iptables -D POSTROUTING -t nat -o eth0 -j MASQUERADE
+iptables -D POSTROUTING -t nat -o eth0 -j MASQUERADE
 # Disable routing
-sudo sysctl net.ipv4.ip_forward=0
+sysctl net.ipv4.ip_forward=0
 # Disable DHCP/DNS server
-sudo service dnsmasq stop
-sudo service hostapd stop
+service dnsmasq stop
+service hostapd stop
