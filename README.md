@@ -34,3 +34,9 @@ start_hotspot.sh
 
 create a wifi hotspot in your ubuntu. <br/>
 testing to be done
+
+screencast.sh
+==============
+
+Records your desktop and stores it. <br/>
+Requires ffmpeg(found in most linux systems) to work.
