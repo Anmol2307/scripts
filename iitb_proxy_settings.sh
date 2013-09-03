@@ -18,9 +18,9 @@ echo "\t[Done]"
 
 echo -n "Applying settings to bashrc"
 sed -i '/.*export.*proxy.*/d' /etc/bash.bashrc
-echo "export http_proxy="http://$username:$password@netmon.iitb.ac.in:80/"
-export ftp_proxy="ftp://$username:$password@netmon.iitb.ac.in:80/"
-export https_proxy="https://$username:$password@netmon.iitb.ac.in:80/"" >> /etc/bash.bashrc
+echo "export http_proxy=\"http://$username:$password@netmon.iitb.ac.in:80/\"
+export ftp_proxy=\"ftp://$username:$password@netmon.iitb.ac.in:80/\"
+export https_proxy=\"https://$username:$password@netmon.iitb.ac.in:80/"\" >> /etc/bash.bashrc
 echo "\t[Done]"
 
 echo -n "Applying settings to wget"
