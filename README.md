@@ -40,3 +40,11 @@ screencast.sh
 
 Records your desktop and stores it. <br/>
 Requires ffmpeg(found in most linux systems) to work.
+
+
+birthday.py
+============
+
+Comment "thank you" on all your "Happy Birthday posts" . :)
+One piece of advice, Too many birthdays of your own may kill you.
+
