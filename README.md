@@ -48,3 +48,8 @@ birthday.py
 Comment "thank you" on all your "Happy Birthday posts" . :)
 One piece of advice, Too many birthdays of your own may kill you.
 
+backupdb.sh
+============
+
+Backup all MySQL/MariaDB databases
+
