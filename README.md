@@ -40,6 +40,7 @@ screencast.sh
 
 Records your desktop and stores it. <br/>
 Requires ffmpeg(found in most linux systems) to work.
+To install ffmpeg, type *sudo apt-get install ffmpeg*
 
 
 birthday.py
