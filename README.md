@@ -54,3 +54,7 @@ backupdb.sh
 
 Backup all MySQL/MariaDB databases
 
+install.sh
+======================
+
+A script to download important tools on 64 bit Linux operating system.
